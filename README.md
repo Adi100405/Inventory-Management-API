@@ -1,11 +1,25 @@
-README.md
-# Smart Inventory Management API
+# Inventory Management API
 
-A backend application built using FastAPI for managing products, suppliers, categories and inventory transactions.
+## Features
 
-Features:
+- User Registration
+- User Login
 - JWT Authentication
+- Category Management
 - Product Management
-- Supplier Management
-- Inventory Tracking
+- Inventory Stock In
+- Inventory Stock Out
+- Inventory Transaction History
 - Dashboard Statistics
+
+## Tech Stack
+
+- FastAPI
+- SQLAlchemy
+- SQLite
+- JWT
+- Passlib
+
+## Run
+
+uvicorn app.main:app --reload
