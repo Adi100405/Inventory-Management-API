@@ -7,6 +7,7 @@ from app.models.user import User
 from app.schemas.auth import LoginRequest
 from app.auth.hashing import verify_password
 from app.auth.security import create_access_token
+from app.auth.dependencies import get_current_user
 
 router = APIRouter()
 
@@ -82,4 +83,12 @@ def login(
     return {
         "access_token": token,
         "token_type": "bearer"
+    }
+
+@router.get("/me")
+def get_me(
+    current_user: str = Depends(get_current_user)
+):
+    return {
+        "email": current_user
     }
