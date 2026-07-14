@@ -4,6 +4,8 @@ from app.auth.hashing import hash_password
 from app.database.database import get_db
 from app.schemas.user import UserCreate
 from app.models.user import User
+from app.schemas.auth import LoginRequest
+from app.auth.hashing import verify_password
 
 router = APIRouter()
 
@@ -46,4 +48,30 @@ def register(
         "id": new_user.id,
         "username": new_user.username,
         "email": new_user.email
+    }
+
+@router.post("/login")
+def login(
+    credentials: LoginRequest,
+    db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(
+        User.email == credentials.email
+    ).first()
+
+    if not user:
+        return {
+            "message": "Invalid credentials"
+        }
+
+    if not verify_password(
+        credentials.password,
+        user.password
+    ):
+        return {
+            "message": "Invalid credentials"
+        }
+
+    return {
+        "message": "Login successful"
     }
