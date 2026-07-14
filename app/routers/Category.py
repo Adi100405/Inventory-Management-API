@@ -30,3 +30,51 @@ def get_categories(
     db: Session = Depends(get_db)
 ):
     return db.query(Category).all()
+
+@router.put("/{category_id}")
+def update_category(
+    category_id: int,
+    category: CategoryCreate,
+    db: Session = Depends(get_db)
+):
+    existing_category = db.query(
+        Category
+    ).filter(
+        Category.id == category_id
+    ).first()
+
+    if not existing_category:
+        return {
+            "message": "Category not found"
+        }
+
+    existing_category.name = category.name
+
+    db.commit()
+    db.refresh(existing_category)
+
+    return existing_category
+
+@router.delete("/{category_id}")
+def delete_category(
+    category_id: int,
+    db: Session = Depends(get_db)
+):
+    category = db.query(
+        Category
+    ).filter(
+        Category.id == category_id
+    ).first()
+
+    if not category:
+        return {
+            "message": "Category not found"
+        }
+
+    db.delete(category)
+
+    db.commit()
+
+    return {
+        "message": "Category deleted successfully"
+    }

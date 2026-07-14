@@ -33,3 +33,56 @@ def get_products(
     db: Session = Depends(get_db)
 ):
     return db.query(Product).all()
+
+@router.put("/{product_id}")
+def update_product(
+    product_id: int,
+    product: ProductCreate,
+    db: Session = Depends(get_db)
+):
+    existing_product = db.query(
+        Product
+    ).filter(
+        Product.id == product_id
+    ).first()
+
+    if not existing_product:
+        return {
+            "message": "Product not found"
+        }
+
+    existing_product.name = product.name
+    existing_product.price = product.price
+    existing_product.quantity = product.quantity
+    existing_product.category_id = product.category_id
+
+    db.commit()
+
+    db.refresh(existing_product)
+
+    return existing_product
+
+@router.delete("/{product_id}")
+def delete_product(
+    product_id: int,
+    db: Session = Depends(get_db)
+):
+    product = db.query(
+        Product
+    ).filter(
+        Product.id == product_id
+    ).first()
+
+    if not product:
+        return {
+            "message": "Product not found"
+        }
+
+    db.delete(product)
+
+    db.commit()
+
+    return {
+        "message": "Product deleted successfully"
+    }
+
