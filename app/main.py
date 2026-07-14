@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 
+from app.routers import auth
+
 app = FastAPI()
 
-@app.get("/")
-def home():
-    return {"message": "Inventory API Running"}
+app.include_router(
+    auth.router,
+    prefix="/auth",
+    tags=["Authentication"]
+)
