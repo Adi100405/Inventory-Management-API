@@ -1,15 +1,7 @@
-from auth.hashing import (
-    hash_password,
-    verify_password
+from auth.security import create_access_token
+
+token = create_access_token(
+    {"sub": "aditya@gmail.com"}
 )
 
-hashed = hash_password("123456")
-
-print(hashed)
-
-print(
-    verify_password(
-        "123456",
-        hashed
-    )
-)
+print(token)

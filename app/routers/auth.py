@@ -6,6 +6,7 @@ from app.schemas.user import UserCreate
 from app.models.user import User
 from app.schemas.auth import LoginRequest
 from app.auth.hashing import verify_password
+from app.auth.security import create_access_token
 
 router = APIRouter()
 
@@ -72,6 +73,13 @@ def login(
             "message": "Invalid credentials"
         }
 
+    token = create_access_token(
+        {
+            "sub": user.email
+        }
+    )
+
     return {
-        "message": "Login successful"
+        "access_token": token,
+        "token_type": "bearer"
     }
